@@ -207,4 +207,3 @@ def fill_ibt(test):
         driver.quit()
 
 
-fill_cbt(test)

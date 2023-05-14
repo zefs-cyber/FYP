@@ -1,0 +1,170 @@
+<!--<!DOCTYPE html>Commented out for codepen-->
+
+<html>
+
+<head>
+    <title> Finding Loans in Tajikistan </title>
+    <link href="styles.css" rel="stylesheet">
+
+</head>
+
+<body>
+    <div id="logo-header">
+        <h1>Telegram Bot</h1>
+        <h1>Finding Loans in Tajikistan</h1>
+        <!--<img src="wastenot_new_logo.png" alt="wastenot-logo">-->
+        <img src="Telegram_logo.svg" alt="wastenot-logo">
+    </div>
+    <h1>What is it?</h1>
+    <p>
+        This project aims to provide a comprehensive and user-friendly solution for customers in Tajikistan who are
+        seeking to make informed decisions about their financial options by offering a sophisticated platform that
+        enables them to easily compare and evaluate the diverse range of loans available from different banks operating
+        within the country. By leveraging advanced technology, data analysis, and intuitive interfaces, the project
+        strives to empower individuals with the necessary tools and information to navigate the complex landscape of
+        loan offerings, thereby facilitating financial literacy and enabling individuals to make optimal choices based
+        on their unique needs and preferences.
+    </p>
+    <h1>How to use?</h1>
+    <ul>
+        <li>Loan Search and Comparison: The project provides a comprehensive platform where users can search and compare
+            various loan options available in Tajikistan. It offers an extensive database of loans from different banks,
+            allowing users to explore and evaluate the terms, interest rates, repayment options, and eligibility
+            criteria of each loan.
+        </li>
+        <li>Real-Time Exchange Rate Information: In addition to loan search functionality, the project also offers
+            real-time exchange rate information. Users can access the latest exchange rates, enabling them to make
+            informed decisions regarding loans and currency conversions. This feature adds value by providing up-to-date
+            financial data for users considering loans with foreign currency components or planning international
+            transactions.
+        </li>
+        <li>Bank Integration and Application Process: The project streamlines the loan application process by
+            integrating with multiple banks in Tajikistan. Users can conveniently apply for loans directly through the
+            platform, eliminating the need to visit individual bank websites or branches. The project simplifies the
+            application procedure, allowing users to submit their loan applications electronically and track their
+            progress.
+        </li>
+    </ul>
+    <div class="row">
+
+        <h2> Homepage </h2>
+
+        <div class="column right">
+            <img src="languages.jpeg" alt="Languages Pictures", style="max-width: 70%;">
+        </div>
+
+        <div class="column left">
+            <p>To start working with the bot user needs to send "/start" command or click on "Start" button</p>
+
+            <h3>Selecting Language</h3>
+            <p>
+                User needs to select one of three languages:
+                <ul>
+                    <li>Tajik language</li>
+                    <li>Russian language</li>
+                    <li>English language</li>
+                </ul>
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <h2> Selecting Actions </h2>
+        <div class="column right">
+            <img src="actions.jpeg" alt="Actions picture", style="max-width: 70%;">
+        </div>
+        <div class="column left">
+
+            <p>
+                In this step user has 3 steps to choose:
+                <ul>
+                    <li>Help With Loan</li>
+                    <li>Exchange Rates</li>
+                    <li>Apply for Loan</li>
+                </ul>
+            </p>
+            <h4><b>Help With Loan</b></h4>
+            <p>Users can specify their loan requirements, and the system will generate a curated list of banks that can potentially fulfill the user's desired loan criteria.</p>
+            <h4><b>Exchange Rates</b></h4>
+            <p>Users can see realtime exhange rates from National Bank of Tajikistan</p>
+            <h4><b>Apply for Loan</b></h4>
+            <p> After answering questions about their desired loan, users can apply for loan in 3 banks across Tajikistan and after that bank representatives will contact them</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <h2>Help With Loan</h2>
+        <div class="column right">
+            <img src="search for loan.jpeg" alt="Languages Pictures", style="max-width: 70%;">
+        </div>
+        <div class="column left">
+            <p>Here user can search for banks which can give to user loan</p>
+            <p>First user needs to answer queestions about:
+                <ol>
+                    <li>Purpose of loan</li>
+                    <li>Currency</li>
+                    <li>Amount</li>
+                    <li>Duration</li>
+                </ol>
+            </p>
+            <p>After answering all the queestions the bot will send results in the form of table where user can see interest rates of banks for his loan and link to the bank with lowest interest rates</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <h2> Exchange Rates </h2>
+        <div class="column right">
+            <img src="exchange rates.jpeg" alt="Languages Pictures", style="max-width: 70%;">
+        </div>
+        <div class="column left">
+            <p> Here user will answer to 3 questions:
+                <ol>
+                    <li>Which currency do you want to change?</li>
+                    <li>To which Currency do you want to change?</li>
+                    <li>How much do you want to change?</li>
+                </ol>
+                <b>Note: </b>All currencies must be written in short formats. Ex: TJS, USD, RUB
+            </p>
+
+        </div>
+    </div>
+
+    <div class="row">
+
+        <h2> Apply For Loan </h2>
+        <div>
+            <p>This action is prety much similar to "Help With Loan", but here we have 3 additional inputs, which are necessary to apply for Loan</p>
+            <p>Inputs:</p>
+            <ol>
+                <li>Select Bank</li>
+                <li>Name Surname</li>
+                <li>Phone number(without +992)</li>
+                <li>Photo of National Passport</li>
+                <li>Purpose of loan</li>
+                <li>Currency of loan</li>
+                <li>Amount of money</li>
+                <li>Duration of loan</li>
+            </ol>
+            <p>After system collects all required information it will send request to the selected bank</p>
+        </div>
+    </div>
+
+
+    <h2> FAQ </h2>
+    <dl>
+        <dt><b>What to do if I finished my job?</b></dt>
+        <dd>
+            - Just leave the bot where you were! When you will come back you can continue working with it
+        </dd>
+        <dt><b>Bot is not taking inputs as it should do?</b></dt>
+        <dd>
+            - In this case just clear history of the chat with the bot and start again
+    </dl>
+    <br>
+    <p style="font-size: large;">
+        In case of any errors contact: <b>dilovar.mashrabov@gmail.com</b>
+    </p>
+</body>
+
+</html>

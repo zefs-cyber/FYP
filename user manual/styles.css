@@ -1,0 +1,59 @@
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    width: 70%;
+    margin: auto;
+  }
+  #logo-header {
+    text-align: center;
+  }
+  h2 {
+    line-height: 130%;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: auto;
+    border-bottom: solid;
+  }
+  p,
+  li,
+  dl,
+  dt,
+  dd {
+    line-height: 130%;
+    font-family: "Arial", Helvetica, sans-serif;
+    font-size: auto;
+  }
+  
+  img {
+    max-width: 20%;
+    height: auto;
+  }
+  
+  .center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+  }
+  
+  /* Create two unequal columns that floats next to each other */
+  .column {
+    float: right;
+    padding: 10px;
+  }
+  
+  .left {
+    width: 50%;
+  }
+  
+  .right {
+    width: 50%;
+  }
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  

@@ -6,6 +6,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver import ActionChains
+from openpyxl import Workbook
 import time
 import pandas as pd
 
@@ -88,7 +89,7 @@ def arvand():
         if content != '':
             result.append(content)
 
-    return [int(result[2][:2]), int(result[0]), int(result[1]), int(result[2][-2:])-2, int(int(result[0])/10), int(result[1])]
+    return [int((int(result[2][:2])+int(result[2][2:4]))/2), int(result[0]), int(result[1]), int((int(result[2][4:6])+int(result[2][6:8]))/2), int(int(result[0])/10), int(result[1])]
 
 def amonatbank():  
     url = 'https://www.amonatbonk.tj/en/personal/loans/potrebitelskiy-kredit/'
@@ -122,7 +123,7 @@ def cbt():
         if content != '':
             result.append(content)
     
-    return [int(result[1][-2:]), int(result[0]), int(result[2])]
+    return [int(result[1][:2]), int(result[0][10:-1]), int(result[2]), int(result[1][6:8]), int(int(result[0][10:-1])/10), int(result[2])]
 
 def eskhata():
     url = 'https://eskhata.com/individuals/lending/lending_types/'
@@ -151,7 +152,7 @@ def ibt():
         if content != '':
             result.append(content)
     # return result
-    return [int(result[2][-2:])+1, int(result[0][-5:]), int(result[1][-2:]), int(result[2][:2])-1, int(int(result[0][-5:])/10), int(result[1][-2:])]
+    return [int(result[2][-2:])+1, int(result[0]), int(result[1][-2:]), int(result[2][:2])-1, int(int(result[0])/10), int(result[1][-2:])]
 
 def spitamen():
     url = 'https://www.spitamenbank.tj/ru/personal/products/credits/potrebitelskiy-kredit'
@@ -180,7 +181,7 @@ def update():
         9:('Spitamen Bank',spitamen),                   
         10:('International Bank of Tajikistan',ibt),  
         11:('Commerce Bank of Tajikistan',cbt),       
-        13:('Sanoatsodirotbonk',ssb),                 
+        # 13:('Sanoatsodirotbonk',ssb),                 
     }
     results = {}
     for i in parsers.keys():
@@ -193,8 +194,11 @@ def update():
                 file.write(f'\n{e}')
     driver.close()
     driver.quit()
+
     
     df = pd.read_excel('loan_data.xlsx', 'consumer loan', engine='openpyxl').set_index('Bank id')
+    df1 = pd.read_excel('loan_data.xlsx', 'car loan', engine='openpyxl').set_index('Bank id')
+    df2 = pd.read_excel('loan_data.xlsx', 'data presence', engine='openpyxl').set_index('Bank id')
     for i in results.keys():
         names = ['%TJS', 'maxTJS', 'durationTJS', '%USD', 'maxUSD', 'durationUSD']
         if df.at[i, 'USD']:
@@ -203,8 +207,11 @@ def update():
         else:
             for name in range(3):
                 df.at[i,names[name]] = results[i][name]
-
-    return df
+    
+    with pd.ExcelWriter('loan_data copy.xlsx') as writer:
+        df2.to_excel(writer, sheet_name='data presence', index=True)
+        df1.to_excel(writer, sheet_name='car loan', index=True)
+        df.to_excel(writer, sheet_name='consumer loan', index=True)
 
 def fill_amonatbank(test):
     url = 'https://www.amonatbonk.tj/en/personal/loans/potrebitelskiy-kredit/#formCredit'
@@ -331,3 +338,8 @@ def fill_ibt(test):
         time.sleep(10)
         driver.close()
         driver.quit()
+
+
+update()
+
+
