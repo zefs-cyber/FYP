@@ -11,10 +11,10 @@ from sklearn.preprocessing import MinMaxScaler
 from PIL import Image
 from pytesseract import pytesseract
 
+#Variable for updating loan_data.xlsx
 update_date = time.time()
 
-
-
+# Function to find the presence of a specific text in an image
 def find_tj(src):
     path_to_tesseract = r'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
     path_to_image = src
@@ -28,42 +28,51 @@ def find_tj(src):
     else:
         return False
 
+# Function to check if a value can be converted to float
 def is_float(num):
     try:
         float(num)
         return True
     except ValueError:
         return False
-    
+
+# Function to convert a value to float and round it    
 def convert_float(num):
     if is_float(num):
         return round(float(num))
 
+# Function to load JSON data from a file
 def load_json():
     with open('sessions.json', 'r') as file:
         data = json.load(file)
     return data
 
+# Function to save JSON data to a file
 def save_json(data):
     with open('sessions.json', 'w') as file:
         json.dump(data, file)
 
+# Function to get the current state from the session handler
 def get_current_state(chat_id, session_handler):
     if chat_id in session_handler:
         return session_handler[chat_id][-1]
 
+# Function to set the state in the session handler
 def set_state(chat_id, session_handler, state):
     if chat_id in session_handler:
         session_handler[chat_id][-1] = state
 
+# Function to get the selected language from the session handler
 def get_language(chat_id, session_handler):
     if chat_id in session_handler:
         return session_handler[chat_id][1]
-    
+
+# Function to set the language in the session handler    
 def set_language(chat_id, session_handler, language):
     if chat_id in session_handler:
         session_handler[chat_id][1] = language
 
+# Function to check all banks based on input criteria
 def check_all(inpt, language):
     df = pd.read_excel('loan_data copy.xlsx', inpt[0], engine='openpyxl')
     if language == 'Tajik':
@@ -84,10 +93,12 @@ def check_all(inpt, language):
 
     return selected
 
+# Function to check the best bank based on input criteria
 def check(inpt, language):
     selected = check_all(inpt, language)
     return selected[selected['%'+inpt[1].upper()] == selected['%'+inpt[1].upper()].min()]
 
+# Function to export the result as an image
 def exp_image(inpt, language):
     selected = check_all(inpt, language)
     if inpt[1] == 'tjs':
@@ -95,6 +106,7 @@ def exp_image(inpt, language):
     else:
         dfi.export(selected[['Bank id', '%USD', 'maxUSD', 'durationUSD']], 'result.png')
 
+#Function to get links from nbt.tj 
 def get_links_banks(url):
   result = []
   site = requests.get(url)
@@ -109,6 +121,7 @@ def get_links_banks(url):
   result.insert(5, link)
   return result
 
+#Create dataframe from the links retrieved from nbt.tj
 def create_df(urls, names):
   url = urls[0]
   encoded_url = urllib.parse.quote(url, safe=':/')
@@ -146,6 +159,7 @@ def create_df(urls, names):
   
   return df_all
 
+#Calculate performance of the banks based on the financial status
 def performance(df):
   df['АSSETS'] = MinMaxScaler().fit_transform(np.array(df['АSSETS']).reshape(-1,1))
   df['LIABILITIES'] = MinMaxScaler().fit_transform(np.array(df['LIABILITIES']).reshape(-1,1))
@@ -176,6 +190,7 @@ def performance(df):
 
   return df
 
+#List of bank names in English
 banks_en = [
     'Orienbank',                         #0+
     'Amonatbank',                        #1+
@@ -194,6 +209,7 @@ banks_en = [
     'Dushanbe City Bank'                 #14No loans
 ]
 
+#List of websites of banks in Tajikistan
 websites = [
     'https://orienbank.tj/individuals/loans/consumer',
     'https://www.amonatbonk.tj/ru/personal/loans/potrebitelskiy-kredit/',
@@ -212,6 +228,7 @@ websites = [
     'https://credit.dc.tj/'
 ]
 
+#List of all columns in loan_data.xlsx in English
 columns_en = [
     'RateTJS',
     'AmountTJS',
@@ -221,6 +238,7 @@ columns_en = [
     'PeriodUSD',
 ]
 
+#List of bank names in Tajik
 banks_tj = [
     'Ориенбонк',
     'Амонатбонк',
@@ -238,6 +256,7 @@ banks_tj = [
     'Саноатсодиротбонк',
     'Душанбе сити бонк']
 
+#List of all columns in loan_data.xlsx in Tajik
 columns_tj = [
     'ФоизTJS',
     'КредитTJS',
@@ -247,6 +266,7 @@ columns_tj = [
     'МухлатUSD',
 ]
 
+#List of bank names in Russian
 banks_ru = [
     'Ориёнбанк',
     'Амонатбанк',
@@ -265,6 +285,7 @@ banks_ru = [
     'Душанбе Сити Банк'
 ]
 
+#List of bank names in Russian
 columns_ru = [
     'СтавкаTJS',
     'МаксСуммаTJS',
@@ -274,6 +295,7 @@ columns_ru = [
     'ПериодdUSD',
 ]
 
+#List of shortened names of currencies that are available in nbt.tj
 currencies = ['USD', 'EUR', 'CNY', 'CHF', 'RUB', 
               'UZS', 'KGS', 'KZT', 'BYN', 'IRR', 
               'AFN', 'PKR', 'TRY', 'TMT', 'GBP', 
@@ -282,6 +304,7 @@ currencies = ['USD', 'EUR', 'CNY', 'CHF', 'RUB',
               'AMD', 'GEL', 'MDL', 'UAH', 'AED', 
               'SAR', 'INR', 'PLN', 'MYR', 'THB']
 
+#Link for webpage with links to files with financial statuses of banks
 link_nbt = 'https://www.nbt.tj/en/banking_system/finance_bank_pokazatel.php'
 
 

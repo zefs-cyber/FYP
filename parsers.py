@@ -14,6 +14,7 @@ opt = Options()
 opt.add_argument('--headless')
 driver = webdriver.Chrome(ChromeDriverManager().install(), options=opt)
 
+#Function to get data from Bonki Rushd
 def bonkirushd():
     
     url = 'https://brt.tj/ru/porteb'
@@ -36,6 +37,7 @@ def bonkirushd():
 
     return [r3, r1*10, r4, r2, r1, r4]
 
+#Function to get data from Orienbonk
 def orienbank():
     
     url = 'https://orienbank.tj/individuals/loans/consumer'
@@ -55,6 +57,7 @@ def orienbank():
 
     return [int(result[1]), int(result[0]), int(result[2][1:])]
 
+#Function to get data from Sanoat Sodirotbonk
 def ssb():
 
     url = 'https://www.ssb.tj/credits?type=1'
@@ -77,6 +80,7 @@ def ssb():
         return result 
         return [int(result[0]), int(result[1]), 24]
 
+#Function to get data from Bonki Arvand
 def arvand():
     url = 'https://www.arvand.tj/cl/kredity/potrebitelskiy'
 
@@ -91,6 +95,7 @@ def arvand():
 
     return [int((int(result[2][:2])+int(result[2][2:4]))/2), int(result[0]), int(result[1]), int((int(result[2][4:6])+int(result[2][6:8]))/2), int(int(result[0])/10), int(result[1])]
 
+#Function to get data from Amonat Bonk
 def amonatbank():  
     url = 'https://www.amonatbonk.tj/en/personal/loans/potrebitelskiy-kredit/'
 
@@ -111,6 +116,7 @@ def amonatbank():
     
     return [int(result1[2]), int(result1[0]), int(result1[1]), int(result2[3]), int(int(result1[0])/10), int(result1[1])]
 
+#Function to get data from Commerce Bonk
 def cbt():
     url = 'https://cbt.tj/retail/credits/barakat'
 
@@ -125,6 +131,7 @@ def cbt():
     
     return [int(result[1][:2]), int(result[0][10:-1]), int(result[2]), int(result[1][6:8]), int(int(result[0][10:-1])/10), int(result[2])]
 
+#Function to get data from Bonki Eskhata
 def eskhata():
     url = 'https://eskhata.com/individuals/lending/lending_types/'
 
@@ -140,6 +147,7 @@ def eskhata():
 
     return [int(result[3][:2]), int(result[4][4:]), int(result[5])]
 
+#Function to get data from International Bank of Tajikistan
 def ibt():
     url = 'https://ibt.tj/credits/kredit-na-neobkhodimye-nuzhdy/'
 
@@ -154,6 +162,7 @@ def ibt():
     # return result
     return [int(result[2][-2:])+1, int(result[0]), int(result[1][-2:]), int(result[2][:2])-1, int(int(result[0])/10), int(result[1][-2:])]
 
+#Function to get data from Spitamen Bonk
 def spitamen():
     url = 'https://www.spitamenbank.tj/ru/personal/products/credits/potrebitelskiy-kredit'
 
@@ -171,6 +180,7 @@ def spitamen():
     # return result_div, result_h3
     return [int(result_h3[0]), int(result_h3[2]), int(result_h3[1]), int(result_div[1][4:6]), int(result_h3[2])/10, int(result_h3[1])]
 
+#Funtion to update loan_data copy.xlsx
 def update():
     parsers = {
         0:('Orienbank',orienbank),                     
@@ -213,6 +223,7 @@ def update():
         df1.to_excel(writer, sheet_name='car loan', index=True)
         df.to_excel(writer, sheet_name='consumer loan', index=True)
 
+#Function for filling loan application in Amonat Bonk
 def fill_amonatbank(test):
     url = 'https://www.amonatbonk.tj/en/personal/loans/potrebitelskiy-kredit/#formCredit'
     try:
@@ -236,6 +247,7 @@ def fill_amonatbank(test):
         driver.close()
         driver.quit()
 
+#Function for filling loan application Commerce Bonk
 def fill_cbt(test):
     url = 'https://cbt.tj/retail/credits/barakat'
 
@@ -291,6 +303,7 @@ def fill_cbt(test):
         driver.close()
         driver.quit()
 
+#Loan application in website International Bank of Tajikistan has slider to set it up use this funtion
 def set_slider_value(driver, value):
     slider = driver.find_element(By.XPATH, '//*[@id="summ"]')
     
@@ -301,6 +314,7 @@ def set_slider_value(driver, value):
     pixel_offset = round(relative_value * slider_width)
     ActionChains(driver).drag_and_drop_by_offset(slider, pixel_offset, 0).perform()
 
+#Function for filling loan application  International Bank of Tajikistan
 def fill_ibt(test):
     url = 'https://ibt.tj/credits/kredit-na-neobkhodimye-nuzhdy/'
     driver = webdriver.Chrome()
@@ -338,8 +352,3 @@ def fill_ibt(test):
         time.sleep(10)
         driver.close()
         driver.quit()
-
-
-update()
-
-
