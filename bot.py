@@ -16,10 +16,10 @@ import os
 TOKEN = auth.TOKEN
 
 session_handler = load_json()
-
 ex = exchange_rates_rss.exchange_rates()
-bot = telebot.TeleBot(TOKEN)
 
+bot = telebot.TeleBot(TOKEN)
+print('Bot Started')
 
 # Handler for the "/start" command
 @bot.message_handler(commands=["start"])
@@ -1185,13 +1185,25 @@ def apply_phone(message):
             
             # Check the user's language and send an appropriate message
             if get_language(message.chat.id, session_handler) == 'Tajik':
-                bot.send_message(message.chat.id, "Лутфан акси шиносномаи худро дар формати JPG фиристед")
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Бозгашт ба аввал")
+                markup.add(item1)
+
+                bot.send_message(message.chat.id, "Лутфан акси шиносномаи худро дар формати JPG фиристед", reply_markup=markup)
                 set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
             elif get_language(message.chat.id, session_handler) == 'Russian':
-                bot.send_message(message.chat.id, "Пожалуйста отправьте фото своего пасспорта в формате JPG")
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Назад в меню")
+                markup.add(item1)
+            
+                bot.send_message(message.chat.id, "Пожалуйста отправьте фото своего пасспорта в формате JPG", reply_markup=markup)
                 set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
             else:
-                bot.send_message(message.chat.id, "Please send photo of your passport in JPG format")
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Back to menu")
+                markup.add(item1)
+
+                bot.send_message(message.chat.id, "Please send photo of your passport in JPG format", reply_markup=markup)
                 set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
         else:
             # The phone number has an incorrect length
@@ -1220,7 +1232,7 @@ def apply_phone(message):
             bot.send_message(message.chat.id, "Please enter numbers")
             set_state(message.chat.id, session_handler, config.States.APPLY_PHONE.value)
 
-# Handler for text messages when the current state is APPLY_PHOTO
+# Handler for text messages when the current state is APPLY_PHOTO and image is sent
 @bot.message_handler(content_types=['photo'], func=lambda message: get_current_state(message.chat.id, session_handler) == config.States.APPLY_PHOTO.value)
 def apply_photo(message):
     # Get the file ID of the photo
@@ -1245,32 +1257,88 @@ def apply_photo(message):
         
         # Check the user's language and send an appropriate message with a keyboard
         if get_language(message.chat.id, session_handler) == 'Tajik':
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton("Қарзи истеъмолӣ")
-            item2 = types.KeyboardButton("Қарзи мошин")
-            markup.add(item1)
-            markup.add(item2)
-            bot.send_message(message.chat.id, "Кабул карда шуд!")
-            bot.send_message(message.chat.id, "Бо кадом мақсад шумо мехоҳед қарз гиред?", parse_mode="html", reply_markup=markup)
-            set_state(message.chat.id, session_handler, config.States.APPLY_PURPOSE.value)  
+            if message.text == "Бозгашт ба аввал":
+                session_handler[message.chat.id][4] = []
+                
+                # Create a custom keyboard for Tajik language
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Кӯмак бо қарз")
+                item2 = types.KeyboardButton("Мубодилаи асъор")
+                item3 = types.KeyboardButton("Ариза ба қарз")
+                item4 = types.KeyboardButton('Кӯмак')
+                item5 = types.KeyboardButton("Бозгашт")
+                markup.add(item1)
+                markup.add(item2)
+                markup.add(item3)
+                markup.add(item4)
+                markup.add(item5)
+
+                bot.send_message(message.chat.id, "Ман ба кор таёрам!\nМан чӣ тавр ба шумо кӯмак расонам?", parse_mode="html", reply_markup=markup)
+                set_state(message.chat.id, session_handler, config.States.ACTION.value)
+            else:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Қарзи истеъмолӣ")
+                item2 = types.KeyboardButton("Қарзи мошин")
+                markup.add(item1)
+                markup.add(item2)
+                bot.send_message(message.chat.id, "Кабул карда шуд!")
+                bot.send_message(message.chat.id, "Бо кадом мақсад шумо мехоҳед қарз гиред?", parse_mode="html", reply_markup=markup)
+                set_state(message.chat.id, session_handler, config.States.APPLY_PURPOSE.value)  
         elif get_language(message.chat.id, session_handler) == 'Russian':
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton("Потребительский кредит")
-            item2 = types.KeyboardButton("Автокредит")
-            markup.add(item1)
-            markup.add(item2)
-            bot.send_message(message.chat.id, "Принято!")
-            bot.send_message(message.chat.id, "C какой целью вы хотите взять в кредит?", parse_mode="html", reply_markup=markup)
-            set_state(message.chat.id, session_handler, config.States.APPLY_PURPOSE.value)
+            if message.text == "Назад в меню":
+                session_handler[message.chat.id][4] = []
+
+                # Create a custom keyboard for Russian language
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Помощь с кредитом")
+                item2 = types.KeyboardButton("Курс валют")
+                item3 = types.KeyboardButton("Подать заявку на кредит")
+                item4 = types.KeyboardButton("Помощь")
+                item5 = types.KeyboardButton("Назад")
+                markup.add(item1)
+                markup.add(item2)
+                markup.add(item3)
+                markup.add(item4)
+                markup.add(item5)
+
+                bot.send_message(message.chat.id, "Я готов к работе!\nЧем могу я вам помочь?", parse_mode="html", reply_markup=markup)
+                set_state(message.chat.id, session_handler, config.States.ACTION.value)
+            else:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Потребительский кредит")
+                item2 = types.KeyboardButton("Автокредит")
+                markup.add(item1)
+                markup.add(item2)
+                bot.send_message(message.chat.id, "Принято!")
+                bot.send_message(message.chat.id, "C какой целью вы хотите взять в кредит?", parse_mode="html", reply_markup=markup)
+                set_state(message.chat.id, session_handler, config.States.APPLY_PURPOSE.value)
         else:
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-            item1 = types.KeyboardButton("Consumer Loan")
-            item2 = types.KeyboardButton("Car Loan")
-            markup.add(item1)
-            markup.add(item2)
-            bot.send_message(message.chat.id, "Recieved!")
-            bot.send_message(message.chat.id, "For what purpose do you want to get loan?", parse_mode="html", reply_markup=markup)   
-            set_state(message.chat.id, session_handler, config.States.APPLY_PURPOSE.value)
+            if message.text == "Back to menu":
+                session_handler[message.chat.id][4] = []
+                # Create a custom keyboard for English language
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Help with a loan")
+                item2 = types.KeyboardButton("Exchange Rates")
+                item3 = types.KeyboardButton("Apply for loan")
+                item4 = types.KeyboardButton("Help")
+                item5 = types.KeyboardButton("Back")
+                markup.add(item1)
+                markup.add(item2)
+                markup.add(item3)
+                markup.add(item4)
+                markup.add(item5)
+
+                bot.send_message(message.chat.id, "I am ready to work!\nHow can i help you", parse_mode="html", reply_markup=markup)
+                set_state(message.chat.id, session_handler, config.States.ACTION.value)
+            else:
+                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+                item1 = types.KeyboardButton("Consumer Loan")
+                item2 = types.KeyboardButton("Car Loan")
+                markup.add(item1)
+                markup.add(item2)
+                bot.send_message(message.chat.id, "Recieved!")
+                bot.send_message(message.chat.id, "For what purpose do you want to get loan?", parse_mode="html", reply_markup=markup)   
+                set_state(message.chat.id, session_handler, config.States.APPLY_PURPOSE.value)
     else:
         # The photo does not contain Tajik text
         
@@ -1283,6 +1351,88 @@ def apply_photo(message):
             set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
         else:
             bot.send_message(message.chat.id, "Please send a photo of your Tajik passport!")
+            set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
+
+# Handler for text messages when the current state is APPLY_PHOTO and text is sent
+@bot.message_handler(content_types=['text'], func=lambda message: get_current_state(message.chat.id, session_handler) == config.States.APPLY_PHOTO.value)
+def apply_photo(message):
+    if get_language(message.chat.id, session_handler) == 'Tajik':
+        if message.text == "Бозгашт ба аввал":
+            session_handler[message.chat.id][4] = []
+            
+            # Create a custom keyboard for Tajik language
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("Кӯмак бо қарз")
+            item2 = types.KeyboardButton("Мубодилаи асъор")
+            item3 = types.KeyboardButton("Ариза ба қарз")
+            item4 = types.KeyboardButton('Кӯмак')
+            item5 = types.KeyboardButton("Бозгашт")
+            markup.add(item1)
+            markup.add(item2)
+            markup.add(item3)
+            markup.add(item4)
+            markup.add(item5)
+
+            bot.send_message(message.chat.id, "Ман ба кор таёрам!\nМан чӣ тавр ба шумо кӯмак расонам?", parse_mode="html", reply_markup=markup)
+            set_state(message.chat.id, session_handler, config.States.ACTION.value)
+        else:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("Бозгашт ба аввал")
+            markup.add(item1)
+
+            bot.send_message(message.chat.id, "Лутфан акси шиносномаи худро дар формати JPG фиристед", reply_markup=markup)
+            set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
+
+    elif get_language(message.chat.id, session_handler) == 'Russian':
+        if message.text == "Назад в меню":
+            session_handler[message.chat.id][4] = []
+
+            # Create a custom keyboard for Russian language
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("Помощь с кредитом")
+            item2 = types.KeyboardButton("Курс валют")
+            item3 = types.KeyboardButton("Подать заявку на кредит")
+            item4 = types.KeyboardButton("Помощь")
+            item5 = types.KeyboardButton("Назад")
+            markup.add(item1)
+            markup.add(item2)
+            markup.add(item3)
+            markup.add(item4)
+            markup.add(item5)
+
+            bot.send_message(message.chat.id, "Я готов к работе!\nЧем могу я вам помочь?", parse_mode="html", reply_markup=markup)
+            set_state(message.chat.id, session_handler, config.States.ACTION.value)
+        else:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("Назад в меню")
+            markup.add(item1)
+        
+            bot.send_message(message.chat.id, "Пожалуйста отправьте фото своего пасспорта в формате JPG", reply_markup=markup)
+            set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
+    else:
+        if message.text == "Back to menu":
+            session_handler[message.chat.id][4] = []
+            # Create a custom keyboard for English language
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("Help with a loan")
+            item2 = types.KeyboardButton("Exchange Rates")
+            item3 = types.KeyboardButton("Apply for loan")
+            item4 = types.KeyboardButton("Help")
+            item5 = types.KeyboardButton("Back")
+            markup.add(item1)
+            markup.add(item2)
+            markup.add(item3)
+            markup.add(item4)
+            markup.add(item5)
+
+            bot.send_message(message.chat.id, "I am ready to work!\nHow can i help you", parse_mode="html", reply_markup=markup)
+            set_state(message.chat.id, session_handler, config.States.ACTION.value)
+        else:
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("Back to menu")
+            markup.add(item1)
+
+            bot.send_message(message.chat.id, "Please send photo of your passport in JPG format", reply_markup=markup)
             set_state(message.chat.id, session_handler, config.States.APPLY_PHOTO.value)
 
 # Handler for text messages when the current state is APPLY_PURPOSE
@@ -1535,7 +1685,6 @@ def apply_duration(message):
                     parsers.fill_cbt([currency, summ, name, phone])
 
                 # Send a message confirming the application and provide further options using the customized keyboard
-                bot.send_message(message.chat.id, str(session_handler[message.chat.id][4]))
                 bot.send_message(message.chat.id, "Ваша заявка принята. Пожалуйста, дождитесь звонка представителя банка.", reply_markup=markup)
                 set_state(message.chat.id, session_handler, config.States.ACTION.value)
                 
